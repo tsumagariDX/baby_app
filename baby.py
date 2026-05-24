@@ -1,9 +1,6 @@
 import streamlit as st
 from datetime import datetime
-from database import init_db, add_record, get_record, delete_record, get_count_by_date, get_records_by_date, get_sleep_time, add_record_with_time
-
-# データベース初期化
-init_db()
+from database import add_record, delete_record, get_count_by_date, get_records_by_date, get_sleep_time, add_record_with_time
 
 st.title("育児記録アプリ")
 
