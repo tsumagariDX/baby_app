@@ -1,6 +1,23 @@
 import streamlit as st
+import hmac
 from datetime import datetime
 from database import add_record, delete_record, get_count_by_date, get_records_by_date, get_sleep_time, add_record_with_time
+
+def check_password():
+    def password_entered():
+        if hmac.compare_digest(st.session_state["password"], st.secrets.passwords.password):
+            st.session_state["authenticated"] = True
+        else:
+            st.error("パスワードが違います")
+
+    if st.session_state.get("authenticated"):
+        return True
+
+    st.text_input("パスワード", type="password", key="password", on_change=password_entered)
+    return False
+
+if not check_password():
+    st.stop()
 
 st.title("育児記録アプリ")
 
