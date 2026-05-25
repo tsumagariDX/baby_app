@@ -1,6 +1,8 @@
 import streamlit as st
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from supabase import create_client
+
+JST = timezone(timedelta(hours=9))
 
 def get_db():
     url = st.secrets["SUPABASE_URL"]
@@ -9,7 +11,7 @@ def get_db():
 
 def add_record(category: str, memo: str = "") -> None:
     db = get_db()
-    now = datetime.now().strftime("%m/%d %H:%M")
+    now = datetime.now(JST).strftime("%m/%d %H:%M")
     db.table("records").insert({
         "category": category,
         "time": now,
