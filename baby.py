@@ -31,11 +31,24 @@ if st.session_state.get("clear_quick_memo"):
 
 memo_input = st.text_input("メモ（任意）", key="quick_memo")
 
+if st.session_state.get("success_message"):
+    st.success("記録しました")
+    st.session_state.success_message = False
+
+if st.session_state.get("fail_message"):
+    st.error("失敗しました！パパに言ってね！")
+    st.session_state.fail_message = False
+
+
 for col, label in zip(cols, labels):
     with col:
         if st.button(label):
-            add_record(label, memo_input)
-            st.session_state.clear_quick_memo = True
+            try:
+                add_record(label, memo_input)
+                st.session_state.clear_quick_memo = True
+                st.session_state.success_message = True
+            except:
+                st.session_state.fail_message = True
             st.rerun()
 
 st.subheader("手動で記録を追加")
@@ -57,8 +70,12 @@ manual_memo = st.text_input("メモ（任意）", key="manual_memo")
 if st.button("追加"):
     date_str = manual_date.strftime("%m/%d")
     time_str = manual_time.strftime("%H:%M")
-    add_record_with_time(manual_category, date_str, time_str, manual_memo)
-    st.session_state.clear_manual_memo = True
+    try:
+        add_record_with_time(manual_category, date_str, time_str, manual_memo)
+        st.session_state.clear_manual_memo = True
+        st.session_state.success_message = True
+    except:
+        st.session_state.fail_message = True
     st.rerun()
 
 # 記録表示
