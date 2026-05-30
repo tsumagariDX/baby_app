@@ -16,8 +16,8 @@ def check_password():
     st.text_input("パスワード", type="password", key="password", on_change=password_entered)
     return False
 
-if not check_password():
-    st.stop()
+# if not check_password():
+#     st.stop()
 
 st.title("育児記録アプリ")
 
