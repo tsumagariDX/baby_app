@@ -22,14 +22,11 @@ def check_password():
 st.title("育児記録アプリ")
 
 # ボタン
-cols = st.columns(4)
 labels = ["起床", "入眠", "授乳", "おむつ替え"]
 
 if st.session_state.get("clear_quick_memo"):
     st.session_state.quick_memo = ""
     st.session_state.clear_quick_memo = False
-
-memo_input = st.text_input("メモ（任意）", key="quick_memo")
 
 if st.session_state.get("success_message"):
     st.toast("記録しました", icon="✅")
@@ -39,44 +36,21 @@ if st.session_state.get("fail_message"):
     st.toast("失敗しました！パパに言ってね！", icon="😢")
     st.session_state.fail_message = False
 
+for i in range(0, len(labels), 2):
+    labels1 = labels[i:i+2]
+    cols1 = st.columns(2)
+    for col, label in zip(cols1, labels1):
+        with col:
+            if st.button(label, use_container_width=True):
+                try:
+                    add_record(label, st.session_state.get("quick_memo", ""))
+                    st.session_state.clear_quick_memo = True
+                    st.session_state.success_message = True
+                except:
+                    st.session_state.fail_message = True
+                st.rerun()
 
-for col, label in zip(cols, labels):
-    with col:
-        if st.button(label):
-            try:
-                add_record(label, memo_input)
-                st.session_state.clear_quick_memo = True
-                st.session_state.success_message = True
-            except:
-                st.session_state.fail_message = True
-            st.rerun()
-
-st.subheader("手動で記録を追加")
-col_a, col_b, col_c = st.columns([2, 2, 2])
-
-with col_a:
-    manual_category = st.selectbox("種類", ["起床", "入眠", "授乳", "おむつ替え"])
-with col_b:
-    manual_date = st.date_input("日付", key="manual_date")
-with col_c:
-    manual_time = st.time_input("時間")
-
-if st.session_state.get("clear_manual_memo"):
-    st.session_state.manual_memo = ""
-    st.session_state.clear_manual_memo = False
-
-manual_memo = st.text_input("メモ（任意）", key="manual_memo")
-
-if st.button("追加"):
-    date_str = manual_date.strftime("%m/%d")
-    time_str = manual_time.strftime("%H:%M")
-    try:
-        add_record_with_time(manual_category, date_str, time_str, manual_memo)
-        st.session_state.clear_manual_memo = True
-        st.session_state.success_message = True
-    except:
-        st.session_state.fail_message = True
-    st.rerun()
+memo_input = st.text_input("メモ（任意）", key="quick_memo")
 
 # 記録表示
 st.subheader("記録一覧")
@@ -110,3 +84,29 @@ if records:
                 st.rerun()
 else:
     st.write("この日の記録はありません")
+st.subheader("手動で記録を追加")
+col_a, col_b, col_c = st.columns([2, 2, 2])
+
+with col_a:
+    manual_category = st.selectbox("種類", ["起床", "入眠", "授乳", "おむつ替え"])
+with col_b:
+    manual_date = st.date_input("日付", key="manual_date")
+with col_c:
+    manual_time = st.time_input("時間")
+
+if st.session_state.get("clear_manual_memo"):
+    st.session_state.manual_memo = ""
+    st.session_state.clear_manual_memo = False
+
+manual_memo = st.text_input("メモ（任意）", key="manual_memo")
+
+if st.button("追加"):
+    date_str = manual_date.strftime("%m/%d")
+    time_str = manual_time.strftime("%H:%M")
+    try:
+        add_record_with_time(manual_category, date_str, time_str, manual_memo)
+        st.session_state.clear_manual_memo = True
+        st.session_state.success_message = True
+    except:
+        st.session_state.fail_message = True
+    st.rerun()
