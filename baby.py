@@ -32,11 +32,11 @@ if st.session_state.get("clear_quick_memo"):
 memo_input = st.text_input("メモ（任意）", key="quick_memo")
 
 if st.session_state.get("success_message"):
-    st.success("記録しました")
+    st.toast("記録しました")
     st.session_state.success_message = False
 
 if st.session_state.get("fail_message"):
-    st.error("失敗しました！パパに言ってね！")
+    st.toast("失敗しました！パパに言ってね！")
     st.session_state.fail_message = False
 
 
